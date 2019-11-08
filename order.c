@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#define MAX_USERNAME 40
-#define MAX_PASSWORD 25
-#define MAX_NO_FOODS 7
-#define MAX_NO_TYPES 10
+#include "customer.h"
 #define MAX_FOOD_NAME 40
-#define MAX_NO_DRINKS 15
-#define MAX_ADD_INFO 256
 
 void display_food(int noOfFoods, char food[][MAX_FOOD_NAME])
 {
@@ -18,14 +13,14 @@ void display_food(int noOfFoods, char food[][MAX_FOOD_NAME])
     printf("%c) Go back\n>", 'a' + noOfFoods);
 }
 
-void display_foodtype(int noOfTypes[], char types[][MAX_NO_TYPES][MAX_FOOD_NAME], int foodPrices[], int foodChoice)
+void display_foodtype(int noOfTypes, char types[][MAX_FOOD_NAME], int foodPrices[])
 {
-    for(int i=0; i < noOfTypes[foodChoice]; i++)
+    for(int i=0; i < noOfTypes; i++)
     {
         putchar('a'+i);
-        printf(") %s (%d)\n", types[foodChoice][i], foodPrices[i]);
+        printf(") %s (%d)\n", types[i], foodPrices[i]);
     }
-    printf("%c) Go back\n>", 'a' + noOfTypes[foodChoice]);
+    printf("%c) Go back\n>", 'a' + noOfTypes);
 }
 
 void display_drink(int noOfDrinks, char drink[][MAX_FOOD_NAME], int drinkPrices[])
@@ -79,16 +74,19 @@ void cutlery(int cutleryChoice)
         printf("yes\n");
 }
 
-void display_order(char addInfo[], char type[][MAX_NO_TYPES][MAX_FOOD_NAME], int foodPrice[][MAX_NO_TYPES], char drink[][MAX_FOOD_NAME], int drinkPrice[], int foodChoice, int typeChoice, int drinkChoice, int cutleryChoice,int noOfDrinks)
+void display_order(char addInfo[], char type[], int foodPrice, char drink[], int drinkPrice, int cutleryChoice, char username[])
 {
+    printf("This is your order:\n");
+    printf("-------------------\n");
+    display_username(username);
     printf("Food items: \n");
-    printf("-%s: %d \n", type[foodChoice][typeChoice], foodPrice[foodChoice][typeChoice]);
-    if(drinkChoice<noOfDrinks-1)
-    printf("-%s: %d \n", drink[drinkChoice], drinkPrice[drinkChoice]);
+    printf("-%s: %d \n", type, foodPrice);
+    if(strcmp(drink,"No, thanks!"))
+        printf("-%s: %d \n", drink, drinkPrice);
     cutlery(cutleryChoice);
     if(strcmp(addInfo, "\0") != 0)
         printf("Additional info: %s\n", addInfo);
-    printf("Payment amount: %d\n", foodPrice[foodChoice][typeChoice] + drinkPrice[drinkChoice]);
+    printf("Payment amount: %d\n", foodPrice + drinkPrice);
     printf("-------------------\n");
 
 }

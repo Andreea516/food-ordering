@@ -47,7 +47,7 @@ int main() {
             }
             case 2:{
                 printf("Please choose the type of %s\n", food[foodChoice]);
-                display_foodtype(noOfTypes, types, foodPrices[foodChoice], foodChoice);
+                display_foodtype(noOfTypes[foodChoice], types[foodChoice], foodPrices[foodChoice]);
                 typeChoice=get_choice_index(noOfTypes[foodChoice], &state);
                 break;
             }
@@ -64,8 +64,7 @@ int main() {
             }
             case 5:{
                 get_info(addInfo);
-                display_username(username);
-                display_order(addInfo, types, foodPrices, drink, drinkPrices, foodChoice, typeChoice, drinkChoice, cutleryChoice,noOfDrinks);
+                display_order(addInfo, types[foodChoice][typeChoice], foodPrices[foodChoice][typeChoice], drink[drinkChoice], drinkPrices[drinkChoice], cutleryChoice,username);
                 confirm_order(&orderConfirmed, username, &state);
                 break;
             }}}

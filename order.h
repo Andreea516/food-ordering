@@ -15,7 +15,7 @@
 
 void display_food(int noOfFoods, char food[][MAX_FOOD_NAME]);
 
-void display_foodtype(int noOfTypes[], char types[][MAX_NO_TYPES][MAX_FOOD_NAME], int foodPrices[], int foodChoice);
+void display_foodtype(int noOfTypes, char types[][MAX_FOOD_NAME], int foodPrices[]);
 
 void display_drink(int noOfDrinks, char drink[][MAX_FOOD_NAME], int drinkPrices[]);
 
@@ -27,7 +27,7 @@ int get_choice_index(int noOfChoices, int *state);
 
 void cutlery(int cutleryChoice);
 
-void display_order(char addInfo[], char type[][MAX_NO_TYPES][MAX_FOOD_NAME], int foodPrice[][MAX_NO_TYPES], char drink[][MAX_FOOD_NAME], int drinkPrice[], int foodChoice, int typeChoice, int drinkChoice, int cutleryChoice,int noOfDrinks);
+void display_order(char addInfo[], char type[], int foodPrice, char drink[], int drinkPrice, int cutleryChoice, char username[]);
 
 void confirm_order(int *orderConfirmed, char username[], int *state);
 

@@ -13,8 +13,6 @@ void sign_in(char username[], char password[])
 
 void display_username(char username[])
 {
-    printf("This is your order:\n");
-    printf("-------------------\n");
     printf("Name: %s\n",username);
 }
 
