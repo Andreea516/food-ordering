@@ -1,59 +1,123 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "customer.h"
 #include "order.h"
+
 #define MAX_USERNAME 40
 #define MAX_PASSWORD 25
-#define MAX_NO_FOODS 7
 #define MAX_NO_TYPES 10
 #define MAX_FOOD_NAME 40
+#define MAX_DRINK_NAME 40
 #define MAX_NO_DRINKS 15
 #define MAX_ADD_INFO 256
+#define MAX_LINE 256
+#define LOAD_DATA "Please load the data"
 
 int main() {
-    char username[MAX_USERNAME],password[MAX_PASSWORD];
-    int noOfFoods=5, noOfTypes[]={4, 5, 4, 6, 4}, noOfDrinks=7;
-    char food[MAX_NO_FOODS][MAX_FOOD_NAME]={"Soup", "Salad", "Pasta", "Pizza", "Noodles"};
-    char types[MAX_NO_FOODS][MAX_NO_TYPES][MAX_FOOD_NAME]={
-                    {"Gazpacho","Lentil cream soup", "Thai soup","Siitake mushroom cream soup"},
-                    {"California Dreams salad", "Thai salad", "Buratta salad", "Cesar salad", "Avocado, tomotoes and mango salad"},
-                    {"Veggie Spaghetti Bologanse", "Campanelle with broccoli and pesto", "Parapdelle with boletus and sour cream", "Spaghetti Arrabiata"},
-                    {"Margherita Pizza", "Porcini Pizza","Bufala Pizza","Quatro Formaggi Pizza","Kalamata Pizza", "Garden Chesse Pizza"},
-                    {"Shiitake Noodles", "Spicy Bamboo Noodles","Singapore Noodles", "Phad Thai"}
-    };
-    int foodPrices[MAX_NO_FOODS][MAX_NO_TYPES]={
-            {17, 16, 17, 19},
-            {28, 28, 28, 28, 30},
-            {29, 30, 32, 25},
-            {25, 32, 31, 32, 31,32},
-            {28, 28, 28, 28}
-    };
-    int drinkPrices[MAX_NO_DRINKS]={12, 13, 9, 15, 14, 12, 0};
-    char drink[MAX_NO_DRINKS][MAX_FOOD_NAME]={"Banana Smoothie", "Mango Smoothie", "Peach Smoothie", "Orange Fresh", "Green Apple", "Ginger Beer", "No, thanks!"};
+    char username[MAX_USERNAME]="admin",password[MAX_PASSWORD]="admin";
+
     int cutleryChoice=0, foodChoice, typeChoice, drinkChoice, state=0, orderConfirmed=0;
     char addInfo[MAX_ADD_INFO];
+
+    int noOfFoodTypes,noOfDrinks,noOfSpecificTypes[MAX_NO_TYPES]; char s[MAX_LINE],**foodTypes,***specificFoodTypes,**drinks, *p;
+    double **specificFoodPrices,*drinkPrices;
+
+    FILE *data;
+    data = fopen("data.txt", "r");
+
+    if(data==NULL)
+    {
+        printf("%s\n>", LOAD_DATA);
+    }
+
+    //read food
+    if(data==NULL)
+        gets(s);
+    else
+        fgets(s,MAX_LINE, data);
+    sscanf(s, "%d", &noOfFoodTypes);
+    foodTypes = (char**)malloc(noOfFoodTypes * sizeof(char*));
+    specificFoodTypes = (char***)malloc(noOfFoodTypes * sizeof(char**));
+    specificFoodPrices = (double**)malloc(noOfFoodTypes * sizeof(double*));
+
+    for(int i=0; i<=noOfFoodTypes-1; i++) {
+        printf("%c", '>');
+        noOfSpecificTypes[i] = 0;
+        foodTypes[i] = (char *) malloc(MAX_FOOD_NAME * sizeof(char));
+        specificFoodTypes[i] = (char **) malloc(MAX_NO_TYPES * sizeof(char *));
+        specificFoodPrices[i] = (double *) malloc(MAX_NO_TYPES * sizeof(double));
+        if(data==NULL)
+            gets(s);
+        else
+            fgets(s,MAX_LINE, data);
+        p = strtok(s, ": ");
+        strcpy(foodTypes[i], p);
+        p = strtok(NULL, "(");
+        while (p != NULL) {
+            p = strtok(NULL, "-");
+            specificFoodTypes[i][noOfSpecificTypes[i]] = (char *) malloc(MAX_FOOD_NAME * sizeof(char));
+            strcpy(specificFoodTypes[i][noOfSpecificTypes[i]], p);
+            specificFoodTypes[i][noOfSpecificTypes[i]][strlen(p) - 1] = '\0';
+            p = strtok(NULL, ")");
+            sscanf(p, "%lf", &specificFoodPrices[i][noOfSpecificTypes[i]]);
+            p = strtok(NULL, "(");
+            noOfSpecificTypes[i]++;
+        }
+    }
+
+    //read drink
+    printf(">");
+    if(data==NULL)
+          gets(s);
+    else
+          fgets(s,MAX_LINE, data);
+    sscanf(s, "%d", &noOfDrinks);
+    drinks = (char**)malloc(MAX_NO_DRINKS * sizeof(char*));
+    drinkPrices = (double*)malloc(MAX_NO_DRINKS * sizeof(double));
+    printf("%c", '>');
+    if(data==NULL)
+        gets(s);
+    else
+        fgets(s,MAX_LINE, data);
+    strrev(s);
+    p = strtok(s, "-");
+    for (int i = noOfDrinks - 1; i >= 0; i--)
+    {
+        if (i != noOfDrinks - 1)
+            p = strtok(NULL, "-");
+        sscanf(strrev(p), "%lf", &drinkPrices[i]);
+        drinks[i] = (char *) malloc(MAX_DRINK_NAME * sizeof(char));
+        p = strtok(NULL, "(");
+        strcpy(drinks[i], p);
+        strrev(drinks[i]);
+    }
+
+
+
     printf("Welcome to Samsara Foodhouse!\nPlease sign in to continue!\n");
     while(!orderConfirmed){
         switch(state){
             case 0:{
-                sign_in(username, password);
+                sign_in_or_up(username,password);
                 state++;
                 break;
             }
             case 1:{
                 printf("Please choose the food you feel like eating today:\n");
-                display_food(noOfFoods, food);
-                foodChoice=get_choice_index(noOfFoods, &state);
+                display_food(noOfFoodTypes, foodTypes);
+                foodChoice=get_choice_index(noOfFoodTypes, &state);
                 break;
             }
             case 2:{
-                printf("Please choose the type of %s\n", food[foodChoice]);
-                display_foodtype(noOfTypes[foodChoice], types[foodChoice], foodPrices[foodChoice]);
-                typeChoice=get_choice_index(noOfTypes[foodChoice], &state);
+                printf("Please choose the type of %s\n", foodTypes[foodChoice]);
+                display_foodtype(noOfSpecificTypes[foodChoice], specificFoodTypes[foodChoice], specificFoodPrices[foodChoice]);
+                typeChoice=get_choice_index(noOfSpecificTypes[foodChoice], &state);
                 break;
             }
             case 3:{
-                printf("Please choose a drink to go with your %s:\n", types[foodChoice][typeChoice]);
-                display_drink(noOfDrinks, drink, drinkPrices );
+                printf("Please choose a drink to go with your %s:\n", specificFoodTypes[foodChoice][typeChoice]);
+                display_drink(noOfDrinks, drinks, drinkPrices );
                 drinkChoice=get_choice_index(noOfDrinks, &state);
                 break;
             }
@@ -64,9 +128,29 @@ int main() {
             }
             case 5:{
                 get_info(addInfo);
-                display_order(addInfo, types[foodChoice][typeChoice], foodPrices[foodChoice][typeChoice], drink[drinkChoice], drinkPrices[drinkChoice], cutleryChoice,username);
+                display_order(addInfo, specificFoodTypes[foodChoice][typeChoice], specificFoodPrices[foodChoice][typeChoice], drinks[drinkChoice], drinkPrices[drinkChoice], cutleryChoice,username);
                 confirm_order(&orderConfirmed, username, &state);
                 break;
             }}}
+
+    //free memory
+
+    for(int i=0;i<noOfFoodTypes;i++) {
+        for(int j=0;j<noOfSpecificTypes[i];j++) {
+            free(specificFoodTypes[i][j]);
+        }
+        free(specificFoodTypes[i]);
+        free(specificFoodPrices[i]);
+        free(foodTypes[i]);
+    }
+    free(specificFoodTypes);
+    free(specificFoodPrices);
+    free(foodTypes);
+    for(int i=0;i<noOfDrinks;i++)
+        free(drinks[i]);
+    free(drinks);
+    free(drinkPrices);
+
+    fclose(data);
     return 0;
 }
