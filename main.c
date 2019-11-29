@@ -23,19 +23,19 @@ int main() {
     int noOfFoodTypes,noOfDrinks,noOfSpecificTypes[MAX_NO_TYPES]; char s[MAX_LINE],**foodTypes,***specificFoodTypes,**drinks, *p;
     double **specificFoodPrices,*drinkPrices;
 
-    FILE *data;
-    data = fopen("data.txt", "r");
+   /* FILE *data;
+    data = fopen("D:/Faculta/An1/CP/food-ordering/data.txt", "r");
 
     if(data==NULL)
-    {
+    {*/
         printf("%s\n>", LOAD_DATA);
-    }
+    //}
 
     //read food
-    if(data==NULL)
+    //if(data==NULL)
         gets(s);
-    else
-        fgets(s,MAX_LINE, data);
+   /* else
+        fgets(s,MAX_LINE, data);*/
     sscanf(s, "%d", &noOfFoodTypes);
     foodTypes = (char**)malloc(noOfFoodTypes * sizeof(char*));
     specificFoodTypes = (char***)malloc(noOfFoodTypes * sizeof(char**));
@@ -47,10 +47,10 @@ int main() {
         foodTypes[i] = (char *) malloc(MAX_FOOD_NAME * sizeof(char));
         specificFoodTypes[i] = (char **) malloc(MAX_NO_TYPES * sizeof(char *));
         specificFoodPrices[i] = (double *) malloc(MAX_NO_TYPES * sizeof(double));
-        if(data==NULL)
+       // if(data==NULL)
             gets(s);
-        else
-            fgets(s,MAX_LINE, data);
+        /*else
+            fgets(s,MAX_LINE, data);*/
         p = strtok(s, ": ");
         strcpy(foodTypes[i], p);
         p = strtok(NULL, "(");
@@ -68,18 +68,18 @@ int main() {
 
     //read drink
     printf(">");
-    if(data==NULL)
+   // if(data==NULL)
           gets(s);
-    else
-          fgets(s,MAX_LINE, data);
+   /* else
+          fgets(s,MAX_LINE, data);*/
     sscanf(s, "%d", &noOfDrinks);
     drinks = (char**)malloc(MAX_NO_DRINKS * sizeof(char*));
     drinkPrices = (double*)malloc(MAX_NO_DRINKS * sizeof(double));
     printf("%c", '>');
-    if(data==NULL)
+    //if(data==NULL)
         gets(s);
-    else
-        fgets(s,MAX_LINE, data);
+   /* else
+        fgets(s,MAX_LINE, data);*/
     strrev(s);
     p = strtok(s, "-");
     for (int i = noOfDrinks - 1; i >= 0; i--)
@@ -151,6 +151,6 @@ int main() {
     free(drinks);
     free(drinkPrices);
 
-    fclose(data);
+   // fclose(data);
     return 0;
 }

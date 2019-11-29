@@ -3,7 +3,7 @@
 #include "customer.h"
 #define MAX_FOOD_NAME 40
 
-void display_food(int noOfFoods, char food[][MAX_FOOD_NAME])
+void display_food(int noOfFoods, char **food)
 {
     for (int i = 0; i < noOfFoods; i++)
     {
@@ -13,22 +13,22 @@ void display_food(int noOfFoods, char food[][MAX_FOOD_NAME])
     printf("%c) Go back\n>", 'a' + noOfFoods);
 }
 
-void display_foodtype(int noOfTypes, char types[][MAX_FOOD_NAME], int foodPrices[])
+void display_foodtype(int noOfTypes, char **types, double *foodPrices)
 {
     for(int i=0; i < noOfTypes; i++)
     {
         putchar('a'+i);
-        printf(") %s (%d)\n", types[i], foodPrices[i]);
+        printf(") %s (%.2f)\n", types[i], foodPrices[i]);
     }
     printf("%c) Go back\n>", 'a' + noOfTypes);
 }
 
-void display_drink(int noOfDrinks, char drink[][MAX_FOOD_NAME], int drinkPrices[])
+void display_drink(int noOfDrinks, char **drink, double *drinkPrices)
 {
     for(int i=0; i < noOfDrinks-1; i++)
     {
         putchar('a' + i);
-        printf(") %s (%d)\n", drink[i], drinkPrices[i]);
+        printf(") %s (%.2f)\n", drink[i], drinkPrices[i]);
 
     }
     printf("%c) No, thanks! \n", 'a' + noOfDrinks-1);
@@ -74,19 +74,19 @@ void cutlery(int cutleryChoice)
         printf("yes\n");
 }
 
-void display_order(char addInfo[], char type[], int foodPrice, char drink[], int drinkPrice, int cutleryChoice, char username[])
+void display_order(char addInfo[], char *type, double foodPrice, char *drink, double drinkPrice, int cutleryChoice, char username[])
 {
     printf("This is your order:\n");
     printf("-------------------\n");
     display_username(username);
     printf("Food items: \n");
-    printf("-%s: %d \n", type, foodPrice);
+    printf("-%s: %.2f \n", type, foodPrice);
     if(strcmp(drink,"No, thanks!"))
-        printf("-%s: %d \n", drink, drinkPrice);
+        printf("-%s: %.2f \n", drink, drinkPrice);
     cutlery(cutleryChoice);
     if(strcmp(addInfo, "\0") != 0)
         printf("Additional info: %s\n", addInfo);
-    printf("Payment amount: %d\n", foodPrice + drinkPrice);
+    printf("Payment amount: %.2f\n", foodPrice + drinkPrice);
     printf("-------------------\n");
 
 }

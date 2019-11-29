@@ -13,11 +13,11 @@
 #ifndef FOOD_ORDERING_ORDER_H
 #define FOOD_ORDERING_ORDER_H
 
-void display_food(int noOfFoods, char food[][MAX_FOOD_NAME]);
+void display_food(int noOfFoods, char **food);
 
-void display_foodtype(int noOfTypes, char types[][MAX_FOOD_NAME], int foodPrices[]);
+void display_foodtype(int noOfTypes, char **types, double *foodPrices);
 
-void display_drink(int noOfDrinks, char drink[][MAX_FOOD_NAME], int drinkPrices[]);
+void display_drink(int noOfDrinks, char **drink, double *drinkPrices);
 
 void display_cutlery();
 
@@ -27,7 +27,7 @@ int get_choice_index(int noOfChoices, int *state);
 
 void cutlery(int cutleryChoice);
 
-void display_order(char addInfo[], char type[], int foodPrice, char drink[], int drinkPrice, int cutleryChoice, char username[]);
+void display_order(char addInfo[], char *type, double foodPrice, char *drink, double drinkPrice, int cutleryChoice, char username[]);
 
 void confirm_order(int *orderConfirmed, char username[], int *state);
 
