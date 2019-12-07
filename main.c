@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -21,13 +22,13 @@ int main() {
     int noOfFoodTypes,noOfDrinks,*noOfSpecificTypes; char s[MAX_LINE],**foodTypes,***specificFoodTypes,**drinks, *p;
     double **specificFoodPrices,*drinkPrices;
 
-     FILE *data;
-     data = fopen("..//data.txt", "r");
-     if(data==NULL)
-     {
-         printf("%s\n>", LOAD_DATA);
-         data=stdin;
-     }
+    FILE *data;
+    data = fopen("..//cmake-build-debug//data.txt", "r");
+    if(data==NULL)
+    {
+        printf("%s\n>", LOAD_DATA);
+        data=stdin;
+    }
 
     //read food
     fgets(s,MAX_LINE, data);
