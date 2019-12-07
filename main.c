@@ -20,66 +20,50 @@ int main() {
     int cutleryChoice=0, foodChoice, typeChoice, drinkChoice, state=0, orderConfirmed=0;
     char addInfo[MAX_ADD_INFO];
 
-    int noOfFoodTypes,noOfDrinks,noOfSpecificTypes[MAX_NO_TYPES]; char s[MAX_LINE],**foodTypes,***specificFoodTypes,**drinks, *p;
+    int noOfFoodTypes,noOfDrinks,*noOfSpecificTypes; char s[MAX_LINE],**foodTypes,***specificFoodTypes,**drinks, *p;
     double **specificFoodPrices,*drinkPrices;
 
-   /* FILE *data;
-    data = fopen("D:/Faculta/An1/CP/food-ordering/data.txt", "r");
-
-    if(data==NULL)
-    {*/
-        printf("%s\n>", LOAD_DATA);
-    //}
+     FILE *data;
+     data = fopen("..//data.txt", "r");
+     if(data==NULL)
+     {
+         printf("%s\n>", LOAD_DATA);
+         data=stdin;
+     }
 
     //read food
-    //if(data==NULL)
-        gets(s);
-   /* else
-        fgets(s,MAX_LINE, data);*/
+    fgets(s,MAX_LINE, data);
     sscanf(s, "%d", &noOfFoodTypes);
     foodTypes = (char**)malloc(noOfFoodTypes * sizeof(char*));
     specificFoodTypes = (char***)malloc(noOfFoodTypes * sizeof(char**));
     specificFoodPrices = (double**)malloc(noOfFoodTypes * sizeof(double*));
-
+    noOfSpecificTypes = (int*)malloc(noOfFoodTypes * sizeof(int));
     for(int i=0; i<=noOfFoodTypes-1; i++) {
-        printf("%c", '>');
-        noOfSpecificTypes[i] = 0;
         foodTypes[i] = (char *) malloc(MAX_FOOD_NAME * sizeof(char));
-        specificFoodTypes[i] = (char **) malloc(MAX_NO_TYPES * sizeof(char *));
-        specificFoodPrices[i] = (double *) malloc(MAX_NO_TYPES * sizeof(double));
-       // if(data==NULL)
-            gets(s);
-        /*else
-            fgets(s,MAX_LINE, data);*/
-        p = strtok(s, ": ");
+        fgets(s,MAX_LINE, data);
+        p = strtok(s, " ");
         strcpy(foodTypes[i], p);
-        p = strtok(NULL, "(");
-        while (p != NULL) {
+        p = strtok(NULL, ":");
+        sscanf(p,"%d",&noOfSpecificTypes[i]);
+        specificFoodTypes[i] = (char **) malloc(noOfSpecificTypes[i] * sizeof(char *));
+        specificFoodPrices[i] = (double *) malloc(noOfSpecificTypes[i] * sizeof(double));
+        for( int j=0; j<noOfSpecificTypes[i]; j++)
+        {
             p = strtok(NULL, "-");
-            specificFoodTypes[i][noOfSpecificTypes[i]] = (char *) malloc(MAX_FOOD_NAME * sizeof(char));
-            strcpy(specificFoodTypes[i][noOfSpecificTypes[i]], p);
-            specificFoodTypes[i][noOfSpecificTypes[i]][strlen(p) - 1] = '\0';
+            specificFoodTypes[i][j] = (char *) malloc(MAX_FOOD_NAME * sizeof(char));
+            strcpy(specificFoodTypes[i][j], p+2);
+            specificFoodTypes[i][j][strlen(p) - 1] = '\0';
             p = strtok(NULL, ")");
-            sscanf(p, "%lf", &specificFoodPrices[i][noOfSpecificTypes[i]]);
-            p = strtok(NULL, "(");
-            noOfSpecificTypes[i]++;
+            sscanf(p, "%lf", &specificFoodPrices[i][j]);
         }
     }
 
     //read drink
-    printf(">");
-   // if(data==NULL)
-          gets(s);
-   /* else
-          fgets(s,MAX_LINE, data);*/
+    fgets(s,MAX_LINE, data);
     sscanf(s, "%d", &noOfDrinks);
-    drinks = (char**)malloc(MAX_NO_DRINKS * sizeof(char*));
-    drinkPrices = (double*)malloc(MAX_NO_DRINKS * sizeof(double));
-    printf("%c", '>');
-    //if(data==NULL)
-        gets(s);
-   /* else
-        fgets(s,MAX_LINE, data);*/
+    drinks = (char**)malloc(noOfDrinks * sizeof(char*));
+    drinkPrices = (double*)malloc(noOfDrinks * sizeof(double));
+    fgets(s,MAX_LINE, data);
     strrev(s);
     p = strtok(s, "-");
     for (int i = noOfDrinks - 1; i >= 0; i--)
@@ -92,8 +76,6 @@ int main() {
         strcpy(drinks[i], p);
         strrev(drinks[i]);
     }
-
-
 
     printf("Welcome to Samsara Foodhouse!\nPlease sign in to continue!\n");
     while(!orderConfirmed){
@@ -122,7 +104,7 @@ int main() {
                 break;
             }
             case 4:{
-               display_cutlery();
+                display_cutlery();
                 cutleryChoice=get_choice_index(2, &state);
                 break;
             }
@@ -145,12 +127,13 @@ int main() {
     }
     free(specificFoodTypes);
     free(specificFoodPrices);
+    free(noOfSpecificTypes);
     free(foodTypes);
     for(int i=0;i<noOfDrinks;i++)
         free(drinks[i]);
     free(drinks);
     free(drinkPrices);
 
-   // fclose(data);
+    // fclose(data);
     return 0;
 }
