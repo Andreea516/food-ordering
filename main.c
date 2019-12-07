@@ -132,6 +132,6 @@ int main() {
     free(drinks);
     free(drinkPrices);
 
-    // fclose(data);
+    fclose(data);
     return 0;
 }
