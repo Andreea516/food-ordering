@@ -6,10 +6,8 @@
 
 #define MAX_USERNAME 40
 #define MAX_PASSWORD 25
-#define MAX_NO_TYPES 10
 #define MAX_FOOD_NAME 40
 #define MAX_DRINK_NAME 40
-#define MAX_NO_DRINKS 15
 #define MAX_ADD_INFO 256
 #define MAX_LINE 256
 #define LOAD_DATA "Please load the data"
