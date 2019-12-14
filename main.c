@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -6,7 +5,6 @@
 #include "order.h"
 
 #define MAX_USERNAME 40
-#define MAX_PASSWORD 25
 #define MAX_FOOD_NAME 40
 #define MAX_DRINK_NAME 40
 #define MAX_ADD_INFO 256
@@ -15,7 +13,7 @@
 #define key "._!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQESTUVWXYZ0123456789"
 
 int main() {
-    char username[MAX_USERNAME]="admin",password[MAX_PASSWORD]="admin";
+    char username[MAX_USERNAME];
 
     int cutleryChoice=0, foodChoice, typeChoice, drinkChoice, state=0, orderConfirmed=0;
     char addInfo[MAX_ADD_INFO];
@@ -84,7 +82,7 @@ int main() {
     while(!orderConfirmed){
         switch(state){
             case 0:{
-                sign_in_or_up(user, &noOfUsers);
+                sign_in_or_up(user, &noOfUsers, username);
                 state++;
                 break;
             }

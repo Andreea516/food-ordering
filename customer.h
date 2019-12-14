@@ -11,7 +11,7 @@ void encryption(char password[], char newPassword[]);
 
 void decryption(char password[], char newPassword[]);
 
-void sign_in_or_up(FILE *user, int *noOfUsers);
+void sign_in_or_up(FILE *user, int *noOfUsers, char username[]);
 
 void sign_in(FILE *user, int *noOfUsers);
 
@@ -27,7 +27,7 @@ int containsDigit(char password_char);
 
 int validate2 (int(*fullFillsCondition)(char), char input_password[], char message[]);
 
-void sign_up(FILE *user, int *noOfUsers);
+void sign_up(FILE *user, int *noOfUsers, char username[]);
 
 void display_username(char username[]);
 

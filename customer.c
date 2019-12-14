@@ -21,7 +21,7 @@
 #define key "Atbash Cipher with \"._!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQESTUVWXYZ0123456789\""
 #define MAX_KEY 256
 
-void sign_in_or_up(FILE *user, int *noOfUsers);
+void sign_in_or_up(FILE *user, int *noOfUsers, char username[]);
 
 void encryption(char password[], char newPassword[])
 {
@@ -90,7 +90,7 @@ void sign_in(FILE *user, int *noOfUsers)
         {
             printf("%s\n", USER_NOT_FOUND);
             ok=1;
-            sign_in_or_up(user, &noOfUsers);
+            sign_in_or_up(user, &noOfUsers, username);
         }
 
     }
@@ -162,7 +162,7 @@ int validate2 (int(*fullFillsCondition)(char), char input_password[], char messa
     return 0;
 }
 
-void sign_up(FILE *user, int *noOfUsers)
+void sign_up(FILE *user, int *noOfUsers, char username[])
 {
     int ok=0; char input_username[30], input_password[30], newPassword[30];
     printf("%s\n", SIGNING_UP);
@@ -194,10 +194,11 @@ void sign_up(FILE *user, int *noOfUsers)
     fclose(user);
     fopen("user", "a+");
     fprintf(user, "%s %s\n", input_username, newPassword);
-
+    strcpy(username, input_username);
+    fclose(user);
 }
 
-void sign_in_or_up(FILE *user, int *noOfUsers)
+void sign_in_or_up(FILE *user, int *noOfUsers, char username[])
 {
     char c;
     printf("%s\n", SIGN_IN_UP);
@@ -212,7 +213,7 @@ void sign_in_or_up(FILE *user, int *noOfUsers)
     else
     {
         if(c=='b')
-            sign_up(user, &noOfUsers);
+            sign_up(user, &noOfUsers, username);
     }
 }
 
