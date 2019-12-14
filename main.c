@@ -12,6 +12,7 @@
 #define MAX_ADD_INFO 256
 #define MAX_LINE 256
 #define LOAD_DATA "Please load the data"
+#define key "._!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQESTUVWXYZ0123456789"
 
 int main() {
     char username[MAX_USERNAME]="admin",password[MAX_PASSWORD]="admin";
@@ -76,11 +77,14 @@ int main() {
         strrev(drinks[i]);
     }
 
+    int noOfUsers;
+    FILE *user;
+
     printf("Welcome to Samsara Foodhouse!\nPlease sign in to continue!\n");
     while(!orderConfirmed){
         switch(state){
             case 0:{
-                sign_in_or_up(username,password);
+                sign_in_or_up(user, &noOfUsers);
                 state++;
                 break;
             }
@@ -132,7 +136,7 @@ int main() {
         free(drinks[i]);
     free(drinks);
     free(drinkPrices);
-
     fclose(data);
+    fclose(user);
     return 0;
 }

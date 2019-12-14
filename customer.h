@@ -7,12 +7,15 @@
 
 //function declaration
 
+void encryption(char password[], char newPassword[]);
 
-void sign_in_or_up(char username[], char password[]);
+void decryption(char password[], char newPassword[]);
 
-void sign_in(char username[], char password[]);
+void sign_in_or_up(FILE *user, int *noOfUsers);
 
-int newUser(char input_username[], char username[]);
+void sign_in(FILE *user, int *noOfUsers);
+
+int newUser(char input_username[], int *noOfUsers, FILE *user);
 
 int isLength(char input_password[]);
 
@@ -24,7 +27,7 @@ int containsDigit(char password_char);
 
 int validate2 (int(*fullFillsCondition)(char), char input_password[], char message[]);
 
-void sign_up(char username[]);
+void sign_up(FILE *user, int *noOfUsers);
 
 void display_username(char username[]);
 
