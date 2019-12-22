@@ -15,7 +15,7 @@ typedef struct
 
 FOOD createFood();
 
-void readFood(FILE *data, int *noOfFoods, char *foodName);
+void readFood(FILE *data, char *foodName);
 
 void readFoodAndTypes(FILE *data, int *noOfFoodsAddr ,FOOD **foodAddr);
 

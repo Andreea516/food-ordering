@@ -28,7 +28,6 @@ CUSTOMER createCustomer()
     c.username = (char*)malloc(MAX_USERNAME* sizeof(char));
     c.password = (char*)malloc(MAX_PASSWORD* sizeof(char));
     strcpy(c.username,"admin"); strcpy(c.password,"admin");
-    printf("%s", c.username);
     return c;
 }
 

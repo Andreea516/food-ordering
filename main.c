@@ -45,6 +45,7 @@ int main() {
     while(!orderConfirmed){
         switch(state){
             case SIGN_IN_UP:{
+
                 sign_in_or_up(c);
                 state++;
                 break;

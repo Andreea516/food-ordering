@@ -21,10 +21,9 @@ FOOD createFood()
 
 //read
 
-void readFood(FILE *data, int *noOfFoods, char *foodName)
+void readFood(FILE *data, char *foodName)
 {
     char s[MAX_LINE], *p;
-
     fgets(s,MAX_LINE, data);
     p = strtok(s, " ");
     strcpy(foodName, p);
@@ -41,7 +40,7 @@ void readFoodAndTypes(FILE *data, int *noOfFoodsAddr ,FOOD **foodAddr)
     for(int i=0; i<noOfFoods; i++)
     {
         food[i]=createFood();
-        readFood(data, food[i].name, &(food[i].noOfTypes));
+        readFood(data, food[i].name);
         readType(data, food[i].noOfTypes, &(food[i].types));
     }
     *noOfFoodsAddr = noOfFoods;
