@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include "customer.h"
 
 #define ERROR_PASSWORD_LONG	"The password must be at least 7 chars long"
 #define ERROR_PASSWORD_NOT_USERNAME	"The password must not contain the username"
@@ -17,104 +19,55 @@
 #define USER_NOT_FOUND	"Username doesn't exist"
 #define DUPLICATE_USER	"Please choose another username!"
 #define INCORRECT_PASSWORD	"Incorrect password"
-#define enc "._!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQESTUVWXYZ0123456789"
-#define key "Atbash Cipher with \"._!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQESTUVWXYZ0123456789\""
-#define MAX_KEY 256
+#define MAX_USERNAME 40
+#define MAX_PASSWORD 25
 
-void sign_in_or_up(FILE *user, int *noOfUsers, char username[]);
-
-void encryption(char password[], char newPassword[])
+CUSTOMER createCustomer()
 {
-    for(int i=0; i<strlen(password); i++)
-    {
-        for(int j=0; j<strlen(enc); j++)
-        {
-            if(password[i]==enc[j])
-            {
-                newPassword[i]=enc[strlen(enc)-j];
-                break;
-            }
-        }
-    }
+    CUSTOMER c;
+    c.username = (char*)malloc(MAX_USERNAME* sizeof(char));
+    c.password = (char*)malloc(MAX_PASSWORD* sizeof(char));
+    strcpy(c.username,"admin"); strcpy(c.password,"admin");
+    printf("%s", c.username);
+    return c;
 }
 
-void decryption(char password[], char newPassword[])
+void sign_in_or_up(CUSTOMER c);
+
+void sign_in(CUSTOMER c)
 {
-    for(int i=0; i<strlen(password); i++)
-    {
-        for(int j=strlen(enc); j>0; j--)
-        {
-            if(password[i]==enc[j])
-            {
-                newPassword[i]=enc[strlen(enc)-j];
-            }
-
-        }
-    }
-}
-
-
-void sign_in(FILE *user, int *noOfUsers)
-{
-    char input_username[50], input_password[50],ok=0,s[256];
-    char username[30], password[30], newPassword[30];
+    char input_username[50], input_password[50],ok=0;
     printf("%s\n", SIGNING_IN);
-    fopen("user", "r");
-    fgets(user,s, MAX_KEY);
-    fscanf(user, "%d", noOfUsers);
     while (ok==0)
     {
-        int ok1=0;
         printf("---Username:\n>");
         gets(input_username);
         printf("---Password:\n>");
         gets(input_password);
-        for(int i=0; i<noOfUsers; )
-            {
-                fscanf(user, "%s", username);
-                fscanf(user, "%s", password);
-                getchar();
-                if(strcmp(input_username, username)==0)
-                {
-                    ok1=1;
-                    decryption(password,newPassword);
-                    if(strcmp(input_password, newPassword)==0)
-                        ok=1;
-                    else
-                        printf("%s\n", INCORRECT_PASSWORD);
-                }
-                else
-                    i++;
-            }
-        if(ok1==0)
+        if(strcmp(input_username, c.username)==0)
+        {
+            if(strcmp(input_password, c.password)==0)
+                ok=1;
+            else
+                printf("%s\n", INCORRECT_PASSWORD);
+        }
+        else
         {
             printf("%s\n", USER_NOT_FOUND);
             ok=1;
-            sign_in_or_up(user, &noOfUsers, username);
+            sign_in_or_up(c);
         }
 
     }
-    fclose(user);
 }
 
-int newUser(char input_username[], int *noOfUsers, FILE *user)
+int newUser(char input_username[], CUSTOMER c)
 {
-    char username [30], password[30], s[MAX_KEY];
-    fopen("user", "r");
-    fgets(user,s, MAX_KEY);
-    fscanf(user, "%d", noOfUsers);
-    for(int i=0; i<noOfUsers; i++)
+    if (strcmp(input_username, c.username) == 0)
     {
-        fscanf(user, "%s", username);
-        fscanf(user, "%s", password);
-        getchar();
-        if (strcmp(input_username, username) == 0)
-        {
-            printf("%s\n", DUPLICATE_USER);
-            return 0;
-        }
+        printf("%s\n", DUPLICATE_USER);
+        return 0;
     }
-    fclose(user);
     return 1;
 }
 
@@ -162,17 +115,16 @@ int validate2 (int(*fullFillsCondition)(char), char input_password[], char messa
     return 0;
 }
 
-void sign_up(FILE *user, int *noOfUsers, char username[])
+void sign_up(CUSTOMER c)
 {
-    int ok=0; char input_username[30], input_password[30], newPassword[30];
+    int ok=0; char input_username[50], input_password[50];
     printf("%s\n", SIGNING_UP);
-
     while (ok==0) {
         printf("---Username:\n>");
         gets(input_username);
         printf("---Password:\n>");
         gets(input_password);
-        if (newUser(input_username, noOfUsers, user)==1)
+        if (newUser(input_username, c)==1)
         {
             if (isLength(input_password)==1)
             {
@@ -184,43 +136,31 @@ void sign_up(FILE *user, int *noOfUsers, char username[])
             }
         }
     }
-    encryption(input_password, newPassword);
-    noOfUsers++;
-    fopen("user", "r+");
-    fseek(user, 0, SEEK_SET);
-    fprintf(user, "%s\n", key);
-    fseek(user, 65, SEEK_SET);
-    fprintf(user, "%d", noOfUsers);
-    fclose(user);
-    fopen("user", "a+");
-    fprintf(user, "%s %s\n", input_username, newPassword);
-    strcpy(username, input_username);
-    fclose(user);
+    strcpy(c.username, input_username);
+
 }
 
-void sign_in_or_up(FILE *user, int *noOfUsers, char username[])
+void sign_in_or_up(CUSTOMER c)
 {
-    char c;
+    char ch;
     printf("%s\n", SIGN_IN_UP);
     printf("a)%s\n", SIGN_IN);
     printf("b)%s\n", SIGN_UP);
-    c=getchar();
+    ch=getchar();
     getchar();
-    if(c=='a')
+    if(ch=='a')
     {
-        sign_in(user, &noOfUsers);
+        sign_in(c);
     }
     else
     {
-        if(c=='b')
-            sign_up(user, &noOfUsers, username);
+        if(ch=='b')
+            sign_up(c);
     }
 }
 
 
-void display_username(char username[])
+void display_username(CUSTOMER c)
 {
-    printf("Name: %s\n",username);
+    printf("Name: %s\n",c.username);
 }
-
-

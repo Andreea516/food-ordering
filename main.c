@@ -3,26 +3,32 @@
 #include <stdlib.h>
 #include "customer.h"
 #include "order.h"
+#include "type.h"
+#include "food.h"
+#include "drink.h"
 
 #define MAX_USERNAME 40
+#define MAX_PASSWORD 25
 #define MAX_FOOD_NAME 40
 #define MAX_DRINK_NAME 40
 #define MAX_ADD_INFO 256
 #define MAX_LINE 256
 #define LOAD_DATA "Please load the data"
-#define key "._!abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQESTUVWXYZ0123456789"
+#define FILE_PATH "D:\\Faculta\\An1\\CP\\food-ordering\\cmake-build-debug\\data.txt"
 
 int main() {
-    char username[MAX_USERNAME];
+
+    CUSTOMER c = createCustomer();
 
     int cutleryChoice=0, foodChoice, typeChoice, drinkChoice, state=0, orderConfirmed=0;
     char addInfo[MAX_ADD_INFO];
 
-    int noOfFoodTypes,noOfDrinks,*noOfSpecificTypes; char s[MAX_LINE],**foodTypes,***specificFoodTypes,**drinks, *p;
-    double **specificFoodPrices,*drinkPrices;
+    int noOfFoods,noOfDrinks; char s[MAX_LINE];
+
+    FOOD *food;
 
     FILE *data;
-    data = fopen("..//cmake-build-debug//data.txt", "r");
+    data = fopen(FILE_PATH, "r");
     if(data==NULL)
     {
         printf("%s\n>", LOAD_DATA);
@@ -30,6 +36,7 @@ int main() {
     }
 
     //read food
+    /*
     fgets(s,MAX_LINE, data);
     sscanf(s, "%d", &noOfFoodTypes);
     foodTypes = (char**)malloc(noOfFoodTypes * sizeof(char*));
@@ -55,8 +62,10 @@ int main() {
             sscanf(p, "%lf", &specificFoodPrices[i][j]);
         }
     }
-
+*/
+    readFood(data, &noOfFoods,food);
     //read drink
+    /*
     fgets(s,MAX_LINE, data);
     sscanf(s, "%d", &noOfDrinks);
     drinks = (char**)malloc(noOfDrinks * sizeof(char*));
@@ -74,67 +83,50 @@ int main() {
         strcpy(drinks[i], p);
         strrev(drinks[i]);
     }
+    */
+    DRINK *drink = (DRINK *)malloc(noOfDrinks * sizeof(DRINK));
 
-    int noOfUsers;
-    FILE *user;
-
+    enum State {
+        SIGN_IN_UP, CHOOSE_FOOD, CHOOSE_TYPE, CHOOSE_DRINK, CHOOSE_CUTLERY, ADD_INFO
+    };
     printf("Welcome to Samsara Foodhouse!\nPlease sign in to continue!\n");
     while(!orderConfirmed){
         switch(state){
-            case 0:{
-                sign_in_or_up(user, &noOfUsers, username);
+            case SIGN_IN_UP:{
+                sign_in_or_up(c);
                 state++;
                 break;
             }
-            case 1:{
+            case CHOOSE_FOOD:{
                 printf("Please choose the food you feel like eating today:\n");
-                display_food(noOfFoodTypes, foodTypes);
-                foodChoice=get_choice_index(noOfFoodTypes, &state);
+                displayFood(noOfFoods, food);
+                foodChoice=get_choice_index(noOfFoods, &state);
                 break;
             }
-            case 2:{
-                printf("Please choose the type of %s\n", foodTypes[foodChoice]);
-                display_foodtype(noOfSpecificTypes[foodChoice], specificFoodTypes[foodChoice], specificFoodPrices[foodChoice]);
-                typeChoice=get_choice_index(noOfSpecificTypes[foodChoice], &state);
+            case CHOOSE_TYPE:{
+                printf("Please choose the type of %s\n", food[foodChoice]);
+                displayFoodType(food[foodChoice].noOfTypes, food[foodChoice].types, food[foodChoice].name);
+                typeChoice=get_choice_index(food[foodChoice].noOfTypes, &state);
                 break;
             }
-            case 3:{
-                printf("Please choose a drink to go with your %s:\n", specificFoodTypes[foodChoice][typeChoice]);
-                display_drink(noOfDrinks, drinks, drinkPrices );
+            case CHOOSE_DRINK:{
+                printf("Please choose a drink to go with your %s:\n", &(food[foodChoice].types[typeChoice]));
+                displayDrink(noOfDrinks,  drink);
                 drinkChoice=get_choice_index(noOfDrinks, &state);
                 break;
             }
-            case 4:{
+            case CHOOSE_CUTLERY:{
                 display_cutlery();
                 cutleryChoice=get_choice_index(2, &state);
                 break;
             }
-            case 5:{
+            case ADD_INFO:{
                 get_info(addInfo);
-                display_order(addInfo, specificFoodTypes[foodChoice][typeChoice], specificFoodPrices[foodChoice][typeChoice], drinks[drinkChoice], drinkPrices[drinkChoice], cutleryChoice,username);
-                confirm_order(&orderConfirmed, username, &state);
+                display_order(addInfo, food[foodChoice].types[typeChoice], drink[drinkChoice], cutleryChoice,c);
+                confirm_order(&orderConfirmed, c, &state);
                 break;
             }}}
 
-    //free memory
-
-    for(int i=0;i<noOfFoodTypes;i++) {
-        for(int j=0;j<noOfSpecificTypes[i];j++) {
-            free(specificFoodTypes[i][j]);
-        }
-        free(specificFoodTypes[i]);
-        free(specificFoodPrices[i]);
-        free(foodTypes[i]);
-    }
-    free(specificFoodTypes);
-    free(specificFoodPrices);
-    free(noOfSpecificTypes);
-    free(foodTypes);
-    for(int i=0;i<noOfDrinks;i++)
-        free(drinks[i]);
-    free(drinks);
-    free(drinkPrices);
     fclose(data);
-    fclose(user);
     return 0;
 }
