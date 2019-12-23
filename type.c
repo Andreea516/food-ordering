@@ -10,26 +10,26 @@
 #define MAX_TYPE_NAME 40
 
 //read
-void readType(FILE *data, int noOfTypes, TYPE **typeAddr)
+void readType(FILE *data, int noOfTypes, TYPE **typeAddr, char *p)
 {
-    char *p;
     TYPE * types = (TYPE*)malloc(noOfTypes * sizeof(TYPE));
     char ** names = (char **) malloc(noOfTypes* sizeof(char *));
     double * prices = (double *) malloc(noOfTypes * sizeof(double));
-
-    for (int i = 0; i < noOfTypes; i++) {
+    for (int i = 0; i < noOfTypes; i++)
+    {
         names[i] = (char *) malloc(MAX_TYPE_NAME * sizeof(char));
         p = strtok(NULL, "-");
         strcpy(names[i], p+2);
         names[i][strlen(p) - 1] = '\0';
         p = strtok(NULL, ")");
-        sscanf(p, "%lf", prices[i]);
+        sscanf(p, "%lf", &prices[i]);
     }
-
-    for(int i=0; i<noOfTypes; i++) {
+    for(int i=0; i<noOfTypes; i++)
+    {
         types[i].name = names[i];
         types[i].price = prices[i];
     }
+
 
     free(names);
     free(prices);
@@ -37,7 +37,7 @@ void readType(FILE *data, int noOfTypes, TYPE **typeAddr)
 }
 
 //display
-void displayFoodType(int noOfTypes, TYPE * types, char *food)
+void displayFoodType(int noOfTypes, TYPE * types)
 {
     for(int i=0; i < noOfTypes; i++)
     {
@@ -47,11 +47,11 @@ void displayFoodType(int noOfTypes, TYPE * types, char *food)
     printf("%c) Go back\n>", 'a' + noOfTypes);
 }
 
-void displayType(TYPE* t)
+/*void displayType(TYPE* t)
 {
     printf("%s (%.2f)\n", t->name, t->price);
 }
-
+*/
 //free
 void freeType(TYPE *t)
 {

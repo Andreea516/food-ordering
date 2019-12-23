@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "customer.h"
-#include "food.h"
 #include "type.h"
 #include "drink.h"
 

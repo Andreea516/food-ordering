@@ -1,1 +1,5 @@
-
+2:
+Pizza 1: (Margerita - 18.00)
+Pasta 2: (Veggie Bolognese - 25.00) (Alfredo - 20.00)
+1:
+(Coca Cola - 10.00)

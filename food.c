@@ -21,28 +21,31 @@ FOOD createFood()
 
 //read
 
-void readFood(FILE *data, char *foodName)
+void readFood(FILE *data, char *foodName, char *p)
 {
-    char s[MAX_LINE], *p;
+    char s[MAX_LINE];
     fgets(s,MAX_LINE, data);
     p = strtok(s, " ");
     strcpy(foodName, p);
     p = strtok(NULL, ":");
+    strcpy(s,p);
 }
 
 void readFoodAndTypes(FILE *data, int *noOfFoodsAddr ,FOOD **foodAddr)
 {
-    char s[MAX_LINE];
+    char s[MAX_LINE], *p;
     int noOfFoods;
     fgets(s,MAX_LINE, data);
-    sscanf(s, "%d", noOfFoods);
+    sscanf(s, "%d", &noOfFoods);
     FOOD *food = (FOOD *) malloc(noOfFoods * sizeof(FOOD));
     for(int i=0; i<noOfFoods; i++)
     {
         food[i]=createFood();
-        readFood(data, food[i].name);
-        readType(data, food[i].noOfTypes, &(food[i].types));
+        readFood(data, food[i].name, p);
+        readType(data, food[i].noOfTypes, &(food[i].types), p);
+
     }
+
     *noOfFoodsAddr = noOfFoods;
     *foodAddr = food;
 }

@@ -27,7 +27,7 @@ int main() {
 
     CUSTOMER c = createCustomer();
 
-    int cutleryChoice=0, foodChoice, typeChoice, drinkChoice, state=0, orderConfirmed=0;
+    int cutleryChoice=0, foodChoice=0, typeChoice=0, drinkChoice=0, state=0, orderConfirmed=0;
     char addInfo[MAX_ADD_INFO];
 
     int noOfFoods,noOfDrinks;
@@ -37,7 +37,6 @@ int main() {
 
     DRINK *drink;
     readDrink(data, &noOfDrinks, &drink);
-
     enum State {
         SIGN_IN_UP, CHOOSE_FOOD, CHOOSE_TYPE, CHOOSE_DRINK, CHOOSE_CUTLERY, ADD_INFO
     };
@@ -48,6 +47,7 @@ int main() {
 
                 sign_in_or_up(c);
                 state++;
+
                 break;
             }
             case CHOOSE_FOOD:{
@@ -58,7 +58,7 @@ int main() {
             }
             case CHOOSE_TYPE:{
                 printf("Please choose the type of %s\n", food[foodChoice]);
-                displayFoodType(food[foodChoice].noOfTypes, food[foodChoice].types, food[foodChoice].name);
+                displayFoodType(food[foodChoice].noOfTypes, food[foodChoice].types);
                 typeChoice=get_choice_index(food[foodChoice].noOfTypes, &state);
                 break;
             }

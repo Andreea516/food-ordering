@@ -13,11 +13,11 @@ typedef struct
 
 //read
 
-void readType(FILE *data, int noOfTypes, TYPE **typeAddr);
+void readType(FILE *data, int noOfTypes, TYPE **typeAddr, char *p);
 
 //display
-void displayFoodType(int noOfTypes, TYPE * types, char *food);
-void displayType(TYPE* t);
+void displayFoodType(int noOfTypes, TYPE * types);
+//void displayType(TYPE* t);
 
 //free
 void freeType(TYPE *t);
