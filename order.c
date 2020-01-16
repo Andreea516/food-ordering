@@ -1,39 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "customer.h"
+#include "type.h"
+#include "drink.h"
+
 #define MAX_FOOD_NAME 40
-
-void display_food(int noOfFoods, char **food)
-{
-    for (int i = 0; i < noOfFoods; i++)
-    {
-        putchar('a'+i);
-        printf(") %s\n", food[i]);
-    }
-    printf("%c) Go back\n>", 'a' + noOfFoods);
-}
-
-void display_foodtype(int noOfTypes, char **types, double *foodPrices)
-{
-    for(int i=0; i < noOfTypes; i++)
-    {
-        putchar('a'+i);
-        printf(") %s (%.2f)\n", types[i], foodPrices[i]);
-    }
-    printf("%c) Go back\n>", 'a' + noOfTypes);
-}
-
-void display_drink(int noOfDrinks, char **drink, double *drinkPrices)
-{
-    for(int i=0; i < noOfDrinks-1; i++)
-    {
-        putchar('a' + i);
-        printf(") %s (%.2f)\n", drink[i], drinkPrices[i]);
-
-    }
-    printf("%c) No, thanks! \n", 'a' + noOfDrinks-1);
-    printf("%c) Go back\n>", 'a' + noOfDrinks);
-}
 
 void display_cutlery()
 {
@@ -74,24 +45,24 @@ void cutlery(int cutleryChoice)
         printf("yes\n");
 }
 
-void display_order(char addInfo[], char *type, double foodPrice, char *drink, double drinkPrice, int cutleryChoice, char username[])
+void display_order(char addInfo[], TYPE type, DRINK drink, int cutleryChoice, CUSTOMER c)
 {
     printf("This is your order:\n");
     printf("-------------------\n");
-    display_username(username);
+    display_username(c);
     printf("Food items: \n");
-    printf("-%s: %.2f \n", type, foodPrice);
-    if(strcmp(drink,"No, thanks!"))
-        printf("-%s: %.2f \n", drink, drinkPrice);
+    printf("-%s: %.2f \n", type.name, type.price);
+    if(strcmp(drink.name,"No, thanks!"))
+        printf("-%s: %.2f \n", drink.name, drink.price);
     cutlery(cutleryChoice);
     if(strcmp(addInfo, "\0") != 0)
         printf("Additional info: %s\n", addInfo);
-    printf("Payment amount: %.2f\n", foodPrice + drinkPrice);
+    printf("Payment amount: %.2f\n", type.price + drink.price);
     printf("-------------------\n");
 
 }
 
-void confirm_order(int *orderConfirmed, char username[], int *state)
+void confirm_order(int *orderConfirmed, CUSTOMER c, int *state)
 {
     char choice;
     printf("a) Confirm Order\n");
@@ -100,7 +71,7 @@ void confirm_order(int *orderConfirmed, char username[], int *state)
     if(choice=='a')
     {
         (*orderConfirmed)=1;
-        printf("Order confirmed! Thank you for buying from us, %s!\n", username);
+        printf("Order confirmed! Thank you for buying from us, %s!\n", c.username);
     }
     else
         (*state)--;
